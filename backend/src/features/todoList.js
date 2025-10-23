@@ -32,6 +32,28 @@ class TodoList {
             release();
         }
     }
+
+    async getTodo(id) {
+        const release = await this.mutex.acquire();
+        try {
+            const todoElem = this.todoList.find(elem => elem.id == id);
+            if (todoElem) {
+                return todoElem;
+            }
+            return null;
+        } finally {
+            release();
+        }
+    }
+
+    async getTodoList(id) {
+        const release = await this.mutex.acquire();
+        try {
+            return this.todoList;
+        } finally {
+            release();
+        }
+    }
 }
 
 const todoListInst = new TodoList();
