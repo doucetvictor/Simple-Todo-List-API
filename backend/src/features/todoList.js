@@ -8,13 +8,7 @@ let checkTitle = (title) => {
 }
 
 class TodoListError extends Error {
-    constructor(message) {
-        super(message);
-        this.name = 'TodoListError';
-        this.code = 400;
-    }
-
-    constructor(code, message) {
+    constructor(message, code = 400) {
         super(message);
         this.name = 'TodoListError';
         this.code = code;
@@ -53,7 +47,7 @@ class TodoList {
         try {
             const todoElem = this.todoList.find(elem => elem.id == id);
             if (!todoElem) {
-                throw new TodoListError(404, 'Error: Element not found');
+                throw new TodoListError('Error: Element not found', 404);
             }
             return todoElem;
         } finally {
@@ -75,7 +69,7 @@ class TodoList {
         try {
             let todoElem = this.todoList.find(elem => elem.id == id);
             if (!todoElem) {
-                throw new TodoListError(404, 'Error: Element not found');
+                throw new TodoListError('Error: Element not found', 404);
             }
             if (title) {
                 checkTitle(title);
@@ -83,6 +77,19 @@ class TodoList {
             }
             todoElem.completed = completed === true;
             return todoElem;
+        } finally {
+            release();
+        }
+    }
+
+    async deleteTodo(id) {
+        const release = await this.mutex.acquire();
+        try {
+            const todoListLength = this.todoList.length;
+            this.todoList = this.todoList.filter(elem => elem.id != id);
+            if (this.todoList.length === todoListLength) {
+                throw new TodoListError('Error: Element not found', 404);
+            }
         } finally {
             release();
         }

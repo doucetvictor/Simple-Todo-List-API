@@ -23,6 +23,8 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
     if (err instanceof TodoListError) {
         res.status(err.code).send(err.message);
+    } else if (err instanceof SyntaxError) {
+        res.status(400).send();
     } else {
         console.error(err);
         res.status(500).send();
