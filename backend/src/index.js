@@ -1,5 +1,6 @@
 const express = require('express');
 const http = require('http');
+const { TodoListError } = require('./features/todoList');
 
 const app = express();
 
@@ -17,6 +18,15 @@ app.use('/v1/todos', require('./routes/todos/index'));
 
 app.use((req, res) => {
     res.status(404).send();
+});
+
+app.use((err, req, res, next) => {
+    if (err instanceof TodoListError) {
+        res.status(400).send(err.message);
+    } else {
+        console.error(err);
+        res.status(500).send();
+    }
 });
 
 http.createServer(app).listen(8080, () => {
