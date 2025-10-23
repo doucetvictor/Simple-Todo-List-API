@@ -3,6 +3,8 @@ const http = require('http');
 
 const app = express();
 
+app.use('/v1/todos', require('./routes/todos/index'));
+
 app.use((req, res) => {
     res.status(404).send();
 });
