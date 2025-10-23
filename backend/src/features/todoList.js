@@ -1,9 +1,23 @@
 const { Mutex } = require('async-mutex');
 
+let checkTitle = (title) => {
+    title = title.trim();
+    if (title.length === 0) {
+        throw new TodoListError('Error: Title cannot be blank');
+    }
+}
+
 class TodoListError extends Error {
     constructor(message) {
         super(message);
         this.name = 'TodoListError';
+        this.code = 400;
+    }
+
+    constructor(code, message) {
+        super(message);
+        this.name = 'TodoListError';
+        this.code = code;
     }
 }
 
@@ -20,10 +34,7 @@ class TodoList {
             if (!title) {
                 throw new TodoListError('Error: Title is required');
             }
-            title = title.trim();
-            if (title.length === 0) {
-                throw new TodoListError('Error: Title cannot be blank');
-            }
+            checkTitle(title);
             const todoElem = {
                 id: ++this.index,
                 title: title,
@@ -41,10 +52,10 @@ class TodoList {
         const release = await this.mutex.acquire();
         try {
             const todoElem = this.todoList.find(elem => elem.id == id);
-            if (todoElem) {
-                return todoElem;
+            if (!todoElem) {
+                throw new TodoListError(404, 'Error: Element not found');
             }
-            return null;
+            return todoElem;
         } finally {
             release();
         }
@@ -54,6 +65,24 @@ class TodoList {
         const release = await this.mutex.acquire();
         try {
             return this.todoList;
+        } finally {
+            release();
+        }
+    }
+
+    async updateTodo(id, title, completed) {
+        const release = await this.mutex.acquire();
+        try {
+            let todoElem = this.todoList.find(elem => elem.id == id);
+            if (!todoElem) {
+                throw new TodoListError(404, 'Error: Element not found');
+            }
+            if (title) {
+                checkTitle(title);
+                todoElem.title = title;
+            }
+            todoElem.completed = completed === true;
+            return todoElem;
         } finally {
             release();
         }
