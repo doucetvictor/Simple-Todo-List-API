@@ -18,7 +18,11 @@ class TodoList {
         const release = await this.mutex.acquire();
         try {
             if (!title) {
-                throw new TodoListError('Error: a title is required');
+                throw new TodoListError('Error: Title is required');
+            }
+            title = title.trim();
+            if (title.length === 0) {
+                throw new TodoListError('Error: Title cannot be blank');
             }
             const todoElem = {
                 id: ++this.index,
