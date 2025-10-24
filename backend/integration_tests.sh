@@ -32,6 +32,22 @@ EXPECTED_STATUS_CODE=201
 EXPECTED_CONTENT=''
 test
 
+TITLE='Updating a todo successfully'
+METHOD='PUT'
+ENDPOINT='/todos'
+BODY='{"id":1,"title":"Updated Title","completed":"true"}'
+EXPECTED_STATUS_CODE=200
+EXPECTED_CONTENT=''
+test
+
+TITLE='Updating a todo without an id returns an error'
+METHOD='PUT'
+ENDPOINT='/todos'
+BODY='{"completed":"true"}'
+EXPECTED_STATUS_CODE=404
+EXPECTED_CONTENT='Error: Element not found'
+test
+
 TITLE='Creating a todo successfully'
 METHOD='POST'
 ENDPOINT='/todos'
