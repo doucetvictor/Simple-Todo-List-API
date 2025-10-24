@@ -1,8 +1,13 @@
 const express = require('express');
 const http = require('http');
+const cors = require('cors');
 const { TodoListError } = require('./features/todoList');
 
 const app = express();
+
+app.use(cors({
+    origin: "http://localhost"
+}));
 
 app.use(express.json());
 app.use(express.urlencoded());
