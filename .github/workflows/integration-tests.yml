@@ -1,0 +1,17 @@
+name: Integration Tests
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  backend-integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Run Backend Integration Tests
+        run: |
+          ./start_server.sh --wait
+          sleep 3
+          ./backend/integration_tests.sh
