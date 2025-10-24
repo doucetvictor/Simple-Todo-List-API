@@ -20,14 +20,77 @@ test() {
         echo
     fi
 
-    unset $BODY
-    unset $QUERY
+    unset BODY
+    unset QUERY
 }
 
-TITLE='creating a todo successfully'
+TITLE='Creating a todo successfully'
 METHOD='POST'
 ENDPOINT='/todos'
 BODY='{"title":"New Title","completed":"false"}'
 EXPECTED_STATUS_CODE=201
 EXPECTED_CONTENT=''
+test
+
+TITLE='Creating a todo successfully'
+METHOD='POST'
+ENDPOINT='/todos'
+BODY='{"title":"Another Title","completed":"true"}'
+EXPECTED_STATUS_CODE=201
+EXPECTED_CONTENT=''
+test
+
+TITLE='Getting a existent todo successfully'
+METHOD='GET'
+ENDPOINT='/todos'
+QUERY='id=1'
+EXPECTED_STATUS_CODE=200
+EXPECTED_CONTENT=''
+test
+
+TITLE='Getting all existent todos successfully'
+METHOD='GET'
+ENDPOINT='/todos'
+EXPECTED_STATUS_CODE=200
+EXPECTED_CONTENT=''
+test
+
+TITLE='Getting a non-existent todo returns 404'
+METHOD='GET'
+ENDPOINT='/todos'
+QUERY='id=9'
+EXPECTED_STATUS_CODE=404
+EXPECTED_CONTENT='Error: Element not found'
+test
+
+TITLE='Creating a todo without a title returns an error'
+METHOD='POST'
+ENDPOINT='/todos'
+BODY='{"completed":"false"}'
+EXPECTED_STATUS_CODE=400
+EXPECTED_CONTENT='Error: Title is required'
+test
+
+TITLE='Creating a todo with a blank title returns an error'
+METHOD='POST'
+ENDPOINT='/todos'
+BODY='{"title":"   ","completed":"false"}'
+EXPECTED_STATUS_CODE=400
+EXPECTED_CONTENT='Error: Title cannot be blank'
+test
+
+TITLE='Deleting a todo successfully'
+METHOD='DELETE'
+ENDPOINT='/todos'
+QUERY='id=1'
+EXPECTED_STATUS_CODE=204
+EXPECTED_CONTENT=''
+test
+
+TITLE='Deleting a non-existent todo returns 404'
+METHOD='DELETE'
+ENDPOINT='/todos'
+QUERY='id=1'
+EXPECTED_STATUS_CODE=404
+EXPECTED_CONTENT='Error: Element not found'
 test
