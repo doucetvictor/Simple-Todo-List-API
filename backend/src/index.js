@@ -6,13 +6,13 @@ const { TodoListError } = require('./features/todoList');
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost"
+    origin: process.env.CORS_ORIGIN || "http://localhost:5173"
 }));
 
 app.use(express.json());
 app.use(express.urlencoded());
 app.use((req, res, next) => {
-    if (req.method === 'POST' && !req.body) {
+    if ((req.method === 'POST' || req.method === 'PUT') && !req.body) {
         res.status(400).send('Error: Request body is required');
     } else {
         next();
