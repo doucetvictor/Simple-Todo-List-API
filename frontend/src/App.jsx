@@ -1,3 +1,8 @@
+/*
+  Main application component for the Simple Todo List API frontend.
+  Handles displaying, adding, editing, deleting, and drag-and-drop of todo items.
+ */
+
 import { useState, useEffect } from 'react'
 import './App.css'
 import { getAllTodos, createTodo, updateTodo, deleteTodo as deleteTodoAPI } from './api/todoService'
@@ -38,9 +43,9 @@ function App() {
   const loadTodos = async () => {
     try {
       setLoading(true)
-      setError(null)
       const todosData = await getAllTodos()
       setTodos(todosData)
+      setError(null)
     } catch (err) {
       setError(err.message)
       console.error('Failed to load todos:', err)
@@ -50,11 +55,10 @@ function App() {
   }
 
   const addTodo = async () => {
-    if (!newTodo.trim() || addingTodo) return
+    if (addingTodo) return
 
     try {
       setAddingTodo(true)
-      setError(null)
       const todoData = {
         title: newTodo.trim(),
         completed: false
@@ -62,6 +66,7 @@ function App() {
       const newTodoItem = await createTodo(todoData)
       setTodos([...todos, newTodoItem])
       setNewTodo('')
+      setError(null)
     } catch (err) {
       setError(err.message)
       console.error('Failed to create todo:', err)
@@ -72,7 +77,6 @@ function App() {
 
   const toggleStatus = async (id) => {
     try {
-      setError(null)
       const todo = todos.find(t => t.id === id)
       if (!todo) return
 
@@ -81,6 +85,7 @@ function App() {
       setTodos(todos.map(t =>
         t.id === id ? updatedTodo : t
       ))
+      setError(null)
     } catch (err) {
       setError(err.message)
       console.error('Failed to update todo:', err)
@@ -89,9 +94,9 @@ function App() {
 
   const deleteTodo = async (id) => {
     try {
-      setError(null)
       await deleteTodoAPI(id)
       setTodos(todos.filter(todo => todo.id !== id))
+      setError(null)
     } catch (err) {
       setError(err.message)
       console.error('Failed to delete todo:', err)
@@ -133,10 +138,10 @@ function App() {
 
     try {
       setEditingSaving(true)
-      setError(null)
       const updatedTodo = await updateTodo(todo.id, { ...todo, title: trimmed })
       setTodos(todos.map(t => (t.id === todo.id ? updatedTodo : t)))
       cancelEdit()
+      setError(null)
     } catch (err) {
       setError(err.message)
       console.error('Failed to update todo title:', err)
@@ -183,7 +188,6 @@ function App() {
     }
 
     try {
-      setError(null)
       const updatedTodo = await updateTodo(draggedTodo.id, {
         ...draggedTodo,
         completed: newStatus
@@ -192,6 +196,7 @@ function App() {
       setTodos(todos.map(t =>
         t.id === draggedTodo.id ? updatedTodo : t
       ))
+      setError(null)
     } catch (err) {
       setError(err.message)
       console.error('Failed to update todo:', err)
@@ -241,7 +246,6 @@ function App() {
       // Don't update if the status is already correct
       if (draggedTodo.completed !== newStatus) {
         try {
-          setError(null)
           const updatedTodo = await updateTodo(draggedTodo.id, {
             ...draggedTodo,
             completed: newStatus
@@ -250,6 +254,7 @@ function App() {
           setTodos(todos.map(t =>
             t.id === draggedTodo.id ? updatedTodo : t
           ))
+          setError(null)
         } catch (err) {
           setError(err.message)
           console.error('Failed to update todo:', err)
@@ -295,7 +300,6 @@ function App() {
         {error && (
           <div className="error-message">
             <span>⚠️ {error}</span>
-            <button onClick={loadTodos} className="retry-btn">Retry</button>
           </div>
         )}
         <div className="add-todo">
@@ -311,7 +315,7 @@ function App() {
           <button
             onClick={addTodo}
             className="add-button"
-            disabled={addingTodo || !newTodo.trim()}
+            disabled={addingTodo}
           >
             {addingTodo ? 'Adding...' : 'Add Task'}
           </button>
@@ -331,7 +335,7 @@ function App() {
               <div
                 key={todo.id}
                 className={`todo-item in-progress ${draggedTodo?.id === todo.id ? 'dragging' : ''}`}
-                draggable={!isMobile}
+                draggable={!isMobile && (!editingTodoId || editingSaving)}
                 onDragStart={(e) => handleDragStart(e, todo)}
                 onDragEnd={handleDragEnd}
                 onTouchStart={(e) => handleTouchStart(e, todo)}
@@ -399,7 +403,7 @@ function App() {
               <div
                 key={todo.id}
                 className={`todo-item completed ${draggedTodo?.id === todo.id ? 'dragging' : ''}`}
-                draggable={!isMobile}
+                draggable={!isMobile && (!editingTodoId || editingSaving)}
                 onDragStart={(e) => handleDragStart(e, todo)}
                 onDragEnd={handleDragEnd}
                 onTouchStart={(e) => handleTouchStart(e, todo)}

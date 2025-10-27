@@ -1,10 +1,18 @@
+/*
+  todoService.js
+  Service module to interact with the Todo API.
+ */
+
 const API_BASE_URL = 'http://localhost:8080/v1/todos';
 
 // Helper function to handle API responses
 const handleResponse = async (response) => {
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
-    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    const errorMessage = await response.text();
+    throw new Error(errorMessage || `Unknown error (Status: ${response.status})`);
+  }
+  if (response.status === 204) {
+    return null;
   }
   return response.json();
 };
@@ -68,18 +76,7 @@ export const deleteTodo = async (id) => {
         'Content-Type': 'application/json',
       },
     });
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-    }
-    
-    // DELETE requests might not return JSON content
-    if (response.status === 204 || response.headers.get('content-length') === '0') {
-      return { success: true };
-    }
-    
-    return await response.json();
+    return await handleResponse(response);
   } catch (error) {
     console.error('Error deleting todo:', error);
     throw error;
