@@ -8,7 +8,7 @@ Create a new todo item
 
 ```
 {
-  "title": "string",
+  "title": string,
   "completed?": boolean
 }
 ```
@@ -17,7 +17,7 @@ Create a new todo item
 
 | Code | Description                | Response                                                                      |
 |------|----------------------------|-------------------------------------------------------------------------------|
-| 201  | todo created               | { "id": number, "title": "string", "completed": boolean, "createdAt": date }  |
+| 201  | todo created               | { "id": number, "title": string, "completed": boolean, "createdAt": date }    |
 | 400  | todo creation failed       | Error: Title is required                                                      |
 
 ## GET /v1/todos
@@ -28,7 +28,7 @@ Get all todo items
 
 | Code | Description                | Response                                                                            |
 |------|----------------------------|-------------------------------------------------------------------------------------|
-| 200  | todo list retrieved        | [{ "id": number, "title": "string", "completed": boolean, "createdAt": date }, ...] |
+| 200  | todo list retrieved        | [{ "id": number, "title": string, "completed": boolean, "createdAt": date }, ...]   |
 
 ## GET /v1/todos
 
@@ -44,7 +44,7 @@ id: number
 
 | Code | Description                | Response                                                                      |
 |------|----------------------------|-------------------------------------------------------------------------------|
-| 200  | todo item retrieved        | { "id": number, "title": "string", "completed": boolean, "createdAt": date }  |
+| 200  | todo item retrieved        | { "id": number, "title": string, "completed": boolean, "createdAt": date }    |
 | 404  | todo item not found        | Error: Element not found                                                      |
 
 ## PUT /v1/todos
@@ -55,7 +55,7 @@ Update a todo item
 
 ```
 {
-  "title?": "string",
+  "title?": string,
   "completed?": boolean
 }
 ```
@@ -64,7 +64,7 @@ Update a todo item
 
 | Code | Description                | Response                                                                      |
 |------|----------------------------|-------------------------------------------------------------------------------|
-| 200  | todo updated               | { "id": number, "title": "string", "completed": boolean, "createdAt": date }  |
+| 200  | todo updated               | { "id": number, "title": string, "completed": boolean, "createdAt": date }    |
 | 400  | todo update failed         | Error: Title is required                                                      |
 
 ## DELETE /v1/todos

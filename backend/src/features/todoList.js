@@ -1,3 +1,11 @@
+/*
+    Module for managing a todo list with concurrency control.
+    Uses async-mutex to ensure thread-safe operations.
+    Defines a TodoList class with methods to add, get, update, and delete todo items.
+    Also defines a custom error class TodoListError for handling specific errors.
+    Exports an instance of TodoList for use in other parts of the application.
+ */
+
 const { Mutex } = require('async-mutex');
 
 let checkTitle = (title) => {

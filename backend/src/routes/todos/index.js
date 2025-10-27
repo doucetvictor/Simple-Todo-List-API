@@ -1,3 +1,8 @@
+/*
+    Router for handling /v1/todos endpoint.
+    Forwards requests to specific route handlers for creating, retrieving, updating, and deleting todos.
+ */
+
 const express = require('express');
 
 const router = express.Router();
