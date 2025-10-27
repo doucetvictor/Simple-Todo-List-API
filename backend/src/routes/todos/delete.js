@@ -1,3 +1,9 @@
+/*
+    Router for handling deletion of todo items.
+    Expects an 'id' query parameter to identify the todo item to delete.
+    Responds with a 204 No Content status code upon successful deletion.
+ */
+
 const express = require('express');
 const { todoListInst } = require('../../features/todoList');
 

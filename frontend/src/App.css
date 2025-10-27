@@ -300,22 +300,6 @@
   margin-right: 1rem;
 }
 
-.retry-btn {
-  background: linear-gradient(45deg, #f44336, #d32f2f);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.retry-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(244, 67, 54, 0.3);
-}
-
 /* Disabled States */
 .todo-input:disabled {
   opacity: 0.6;
